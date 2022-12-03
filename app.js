@@ -5,8 +5,8 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const routes = require('./routes');
-const handleError = require('./middlewares/handeError');
-const { DEV_DB_PATH } = require('./utils/constants');
+const errorHandler = require('./middlewares/errorHandler');
+const { DEV_DB_PATH } = require('./utils/config');
 
 const app = express();
 const { PORT = 3000, NODE_ENV, DB_PATH } = process.env;
@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(requestLogger);
 app.use(routes);
 app.use(errorLogger);
-app.use(handleError);
+app.use(errorHandler);
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
 });
