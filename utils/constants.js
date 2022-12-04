@@ -15,8 +15,6 @@ const MOVIE_DELETED_MSG = 'Фильм удален';
 const REQUEST_LIMITED_MSG = 'Слишком много запросов, попробуйте позже';
 const URL_PATTERN = /^https?:\/\/(?:w{3}\.)?(?:[a-z0-9]+[a-z0-9-]*\.)+[a-z]{2,}(?::[0-9]+)?(?:\/\S*)?#?$/i;
 const ALLOWED_CORS = [
-  'http://localhost:3001',
-  'https://localhost:3001',
   'http://amo.movies-explorer.nomoredomains.club',
   'https://amo.movies-explorer.nomoredomains.club',
 ];
