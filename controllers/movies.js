@@ -13,6 +13,7 @@ const {
   MOVIE_NOT_FOUND_MSG,
   MOVIE_FORBIDEN_MSG,
   INTERNAL_ERROR_MSG,
+  MOVIE_DELETED_MSG,
 } = require('../utils/constants');
 
 module.exports.getMovies = (req, res, next) => {
@@ -70,7 +71,7 @@ module.exports.deleteMovie = (req, res, next) => {
       }
       return movieModel.findByIdAndRemove(req.params.movieId);
     })
-    .then((movie) => res.status(OK).send({ message: `Карточка _id:${movie._id} удалена` }))
+    .then(() => res.status(OK).send({ message: MOVIE_DELETED_MSG }))
     .catch((err) => {
       if (err instanceof NotFoundError || err instanceof ForbidenError) {
         return next(err);
