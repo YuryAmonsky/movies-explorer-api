@@ -1,5 +1,6 @@
 const { celebrate, Joi } = require('celebrate');
-const { URL_PATTERN } = require('./constants');
+const validator = require('validator');
+const { INVALID_URL_FORMAT_MSG } = require('./constants');
 
 module.exports.validateSignIn = () => celebrate({
   body: Joi.object().keys({
@@ -23,9 +24,24 @@ module.exports.validateCreateMovie = () => celebrate({
     duration: Joi.number().integer().required(),
     year: Joi.string().required(),
     description: Joi.string().required(),
-    image: Joi.string().regex(URL_PATTERN).required(),
-    trailerLink: Joi.string().regex(URL_PATTERN).required(),
-    thumbnail: Joi.string().regex(URL_PATTERN).required(),
+    image: Joi.string().required().custom((value, helpers) => {
+      if (validator.isURL(value)) {
+        return value;
+      }
+      return helpers.message(INVALID_URL_FORMAT_MSG);
+    }),
+    trailerLink: Joi.string().required().custom((value, helpers) => {
+      if (validator.isURL(value)) {
+        return value;
+      }
+      return helpers.message(INVALID_URL_FORMAT_MSG);
+    }),
+    thumbnail: Joi.string().required().custom((value, helpers) => {
+      if (validator.isURL(value)) {
+        return value;
+      }
+      return helpers.message(INVALID_URL_FORMAT_MSG);
+    }),
     movieId: Joi.number().integer().required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
