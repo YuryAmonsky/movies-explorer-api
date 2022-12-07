@@ -1,4 +1,3 @@
-/* eslint no-console: ["error", { allow: ["log"] }] */
 const { NODE_ENV, JWT_SECRET } = process.env;
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
@@ -12,7 +11,6 @@ const {
   InternalServerError,
 } = require('../utils/errors');
 const {
-  OK,
   USER_CONFLICT_MSG,
   USER_BAD_REQUEST_MSG,
   USER_NOT_FOUND_MSG,
@@ -28,7 +26,7 @@ module.exports.login = (req, res, next) => {
         NODE_ENV === 'production' ? JWT_SECRET : DEV_SECRET_KEY,
         { expiresIn: '7d' },
       );
-      res.status(OK).send({
+      res.send({
         token,
         user: {
           _id: user._id,
@@ -50,7 +48,7 @@ module.exports.createUser = (req, res, next) => {
       name,
       email,
     }) => {
-      res.status(OK).send(
+      res.send(
         {
           data: {
             _id,
@@ -76,7 +74,7 @@ module.exports.getUser = (req, res, next) => {
   if (req.params.userId) userId = req.params.userId;
   else userId = req.user._id;
   userModel.findById(userId).orFail(new NotFoundError(USER_NOT_FOUND_MSG))
-    .then((user) => res.status(OK).send({ data: user }))
+    .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err instanceof NotFoundError) {
         return next(err);
@@ -92,13 +90,16 @@ module.exports.updateUserInfo = (req, res, next) => {
   const { name, email } = req.body;
   userModel.findByIdAndUpdate(req.user._id, { name, email }, { new: true })
     .orFail(new NotFoundError(USER_NOT_FOUND_MSG))
-    .then((user) => res.status(OK).send({ data: user }))
+    .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err instanceof NotFoundError) {
         return next(err);
       }
       if (err instanceof mongoose.Error.ValidationError) {
         return next(new BadRequestError(USER_BAD_REQUEST_MSG));
+      }
+      if (err.code === 11000) {
+        return next(new ConflictError(USER_CONFLICT_MSG));
       }
       return next(new InternalServerError(INTERNAL_ERROR_MSG));
     });

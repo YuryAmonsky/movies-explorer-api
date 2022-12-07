@@ -1,7 +1,5 @@
 const router = require('express').Router();
-// const { celebrate, Joi } = require('celebrate');
 const { validateCreateMovie, validateDeleteMovie } = require('../utils/validator');
-// const { URL_PATTERN } = require('../utils/constants');
 const {
   getMovies,
   createMovie,

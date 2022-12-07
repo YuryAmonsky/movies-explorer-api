@@ -1,4 +1,3 @@
-/* eslint no-console: ["error", { allow: ["log"] }] */
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
@@ -22,5 +21,4 @@ app.use(routes);
 app.use(errorLogger);
 app.use(errorHandler);
 app.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}`);
 });

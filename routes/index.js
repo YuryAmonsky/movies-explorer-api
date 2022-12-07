@@ -32,7 +32,7 @@ router.use('/users', validateToken, users);
 
 router.use('/movies', validateToken, movies);
 
-router.use('*', (req, res, next) => {
+router.use('*', validateToken, (req, res, next) => {
   const err = new NotFoundError(URL_NOT_FOUND_MSG);
   next(err);
 });

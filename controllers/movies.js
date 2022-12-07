@@ -1,4 +1,3 @@
-/* eslint no-console: ["error", { allow: ["log"] }] */
 const mongoose = require('mongoose');
 const movieModel = require('../models/movie');
 const {
@@ -8,7 +7,6 @@ const {
   InternalServerError,
 } = require('../utils/errors');
 const {
-  OK,
   MOVIE_BAD_REQUEST_MSG,
   MOVIE_NOT_FOUND_MSG,
   MOVIE_FORBIDEN_MSG,
@@ -18,7 +16,7 @@ const {
 
 module.exports.getMovies = (req, res, next) => {
   movieModel.find({}).sort({ createdAt: -1 })
-    .then((movies) => res.status(OK).send({ data: movies }))
+    .then((movies) => res.send({ data: movies }))
     .catch(next);
 };
 
@@ -32,7 +30,6 @@ module.exports.createMovie = (req, res, next) => {
     image,
     trailerLink,
     thumbnail,
-    owner,
     movieId,
     nameRU,
     nameEN,
@@ -46,13 +43,13 @@ module.exports.createMovie = (req, res, next) => {
     image,
     trailerLink,
     thumbnail,
-    owner,
+    owner: req.user._id,
     movieId,
     nameRU,
     nameEN,
   })
     .then((movie) => {
-      res.status(OK).send({ data: movie });
+      res.send({ data: movie });
     })
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
@@ -71,7 +68,7 @@ module.exports.deleteMovie = (req, res, next) => {
       }
       return movieModel.findByIdAndRemove(req.params.movieId);
     })
-    .then(() => res.status(OK).send({ message: MOVIE_DELETED_MSG }))
+    .then(() => res.send({ message: MOVIE_DELETED_MSG }))
     .catch((err) => {
       if (err instanceof NotFoundError || err instanceof ForbidenError) {
         return next(err);
